@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const bcrypt = require("bcrypt");
-
+const jwt = require("jsonwebtoken");
 const db = require("../../models");
 const { registerValidation } = require("../../validation");
 // const User = require("../models/User");
@@ -35,7 +35,7 @@ router.post("/register", (req, res) => {
           if (error) throw error;
           // change the password to hash
           newUser.password = hash;
-          
+
           newUser
             .save()
             .then((createdUser) => res.json(createdUser))
@@ -47,10 +47,10 @@ router.post("/register", (req, res) => {
 });
 
 // LOGIN ROUTE
-router.post("/login", (req, res ) =>{
+router.post("/login", (req, res) => {
     
-    // res.json("login route connected🎈")
-})
+  // res.json("login route connected🎈")
+});
 
 //Postman route http://localhost:8000/api/users/6193f7c1975bdb73c252666f
 router.delete("/:id", (req, res) => {
