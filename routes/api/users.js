@@ -46,6 +46,12 @@ router.post("/register", (req, res) => {
   });
 });
 
+// LOGIN ROUTE
+router.post("/login", (req, res ) =>{
+    
+    // res.json("login route connected🎈")
+})
+
 //Postman route http://localhost:8000/api/users/6193f7c1975bdb73c252666f
 router.delete("/:id", (req, res) => {
   db.User.findByIdAndDelete(req.params.id)
