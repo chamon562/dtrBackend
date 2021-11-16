@@ -3,12 +3,11 @@ const express = require("express");
 const app = express();
 const cors = require("cors");
 const { urlencoded } = require("express");
-
+const users = require("./routes/users");
 // middlware
 app.use(cors());
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
-
 
 require("dotenv").config();
 const mongoose = require("mongoose");
@@ -26,6 +25,8 @@ db.once("open", () => {
 db.on("error", (error) => {
   console.log(`Database error\n ${error}`);
 });
+
+app.use("/api/users", users);
 
 const PORT = process.env.PORT || 3000;
 
