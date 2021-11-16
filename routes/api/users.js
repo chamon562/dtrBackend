@@ -9,6 +9,8 @@ router.get("/test", (req, res) => {
   res.status(200).json("users test route is working 😸");
 });
 
+// REGISTER a USER
+// Postman route http://localhost:8000/api/users/register
 router.post("/register", (req, res) => {
   // find user by email
   db.User.findOne({ email: req.body.email }).then((user) => {
@@ -38,5 +40,17 @@ router.post("/register", (req, res) => {
     }
   });
 });
+
+//Postman route http://localhost:8000/api/users/6193f7c1975bdb73c252666f
+router.delete("/:id", (req,res) =>{
+    db.User.findByIdAndDelete(req.params.id)
+    .then(() =>{
+        res.status(204).json({message:"User has been deleted"})
+        console.log("User deleted")
+    })
+    .catch((err, ) =>{
+        res.json(err)
+    })
+})
 
 module.exports = router;
