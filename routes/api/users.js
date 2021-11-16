@@ -1,8 +1,10 @@
+require("dotenv").config();
 const express = require("express");
 const router = express.Router();
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const db = require("../../models");
+const JWT_SECRET = process.env.JWT_SECRET;
 const { registerValidation, loginValidation } = require("../../validation");
 // const User = require("../models/User");
 // Postman http://localhost:8000/api/users/test
@@ -51,14 +53,34 @@ router.post("/login", (req, res) => {
   const email = req.body.email;
   const password = req.body.password;
   // validation email and password
-  const { error } = loginValidation(req.body);
-  if (error) {
-    return res.status(400).send(error.detailse[0].message);
-  }
+  //   const { error } = loginValidation(req.body);
+  //   if (error) {
+  //     return res.status(400).send(error.details);
+  //   }
   // find a user by email
   db.User.findOne({ email }).then((user) => {
     if (!user) {
-      res.status(400).json({ msg: "User not found" });
+      res.status(400).json({ message: "Email or password is incorrect" });
+    } else {
+      // Check password with bcrypt
+      bcrypt.compare(password, user.password).then((isMatch) => {
+        if (isMatch) {
+          //   if User isMatch then send Jsonwebtoken
+          const payload = {
+            id: user.id,
+            name: user.name,
+            email: user.email,
+          };
+          //   Sign token
+          jwt.sign(payload, JWT_SECRET, { expiresIn: 3600 }, (error, token) => {
+            res.json({ sucess: true, token: `Bearer ${token}` });
+          });
+        } else {
+          return res
+            .status(400)
+            .send({ message: "Email or password is incorrect" });
+        }
+      });
     }
   });
   // res.json("login route connected🎈")
