@@ -3,7 +3,7 @@ const router = express.Router();
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const db = require("../../models");
-const { registerValidation } = require("../../validation");
+const { registerValidation, loginValidation } = require("../../validation");
 // const User = require("../models/User");
 // Postman http://localhost:8000/api/users/test
 router.get("/test", (req, res) => {
@@ -48,7 +48,19 @@ router.post("/register", (req, res) => {
 
 // LOGIN ROUTE
 router.post("/login", (req, res) => {
-    
+  const email = req.body.email;
+  const password = req.body.password;
+  // validation email and password
+  const { error } = loginValidation(req.body);
+  if (error) {
+    return res.status(400).send(error.detailse[0].message);
+  }
+  // find a user by email
+  db.User.findOne({ email }).then((user) => {
+    if (!user) {
+      res.status(400).json({ msg: "User not found" });
+    }
+  });
   // res.json("login route connected🎈")
 });
 
