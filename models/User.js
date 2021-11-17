@@ -14,6 +14,10 @@ const userSchema = new mongoose.Schema(
       min: 6,
       max: 255,
     },
+    friendId:{
+      type: Number,
+      required: true,
+    },
     password: {
       type: String,
       required: true,
