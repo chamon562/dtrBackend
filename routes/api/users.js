@@ -87,6 +87,7 @@ router.post("/login", (req, res) => {
   // res.json("login route connected🎈")
 });
 
+// GET current user info (private)
 // to get the authorization shown in postman
 // make sure go to Auth tab drop down menu Bearer Token and to the right where it says token
 // copy paste the given token of the user
@@ -96,7 +97,6 @@ router.post("/login", (req, res) => {
 //     "name": "newuser",
 //     "email": "newuser@gmail.com"
 // }
-// GET current user info (private)
 // the route is http://localhost:8000/api/users/current
 router.get(
   "/current",
@@ -109,6 +109,23 @@ router.get(
     });
   }
 );
+
+// Edit user by id
+router.put("/:id", (req, res) => {
+  db.User.findByIdAndUpdate(
+    { _id: req.params.id },
+    { name: req.body.name },
+    { new: true }
+  )
+    .then((updatedUser) => {
+      console.log(updatedUser);
+      res.send(updatedUser);
+    })
+    .catch((error) => {
+      console.log(error);
+      res.status(503).send({ message: "Server error" });
+    });
+});
 
 //Postman route http://localhost:8000/api/users/6193f7c1975bdb73c252666f
 router.delete("/:id", (req, res) => {
