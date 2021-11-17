@@ -110,6 +110,17 @@ router.get(
   }
 );
 
+// get user by id can be used for search users in database
+router.get("/:id", (req, res) => {
+  db.User.findById(req.params.id)
+    .then((user) => {
+      res.send(`name: ${user.name} \n email: ${user.email}`);
+    })
+    .catch((error) => {
+      console.log("Error: ", error);
+    });
+});
+
 // Edit user by id
 router.put("/:id", (req, res) => {
   db.User.findByIdAndUpdate(
