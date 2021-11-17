@@ -16,10 +16,6 @@ router.get("/test", (req, res) => {
 // REGISTER a USER
 // Postman route http://localhost:8000/api/users/register
 router.post("/register", (req, res) => {
-  const { error } = registerValidation(req.body);
-  if (error) {
-    return res.status(400).send(error.details[0].message);
-  }
   // find user by email
   db.User.findOne({ email: req.body.email }).then((user) => {
     if (user) {
@@ -29,6 +25,7 @@ router.post("/register", (req, res) => {
       const newUser = new db.User({
         name: req.body.name.toLowerCase(),
         email: req.body.email.toLowerCase(),
+        friendId: req.body.friendId,
         password: req.body.password,
       });
       // adding bcrypt to hash password
@@ -105,6 +102,7 @@ router.get(
     res.json({
       id: req.user.id,
       name: req.user.name,
+      friendid: req.user.friendId,
       email: req.user.email,
     });
   }
@@ -114,7 +112,7 @@ router.get(
 router.get("/:id", (req, res) => {
   db.User.findById(req.params.id)
     .then((user) => {
-      res.send(`name: ${user.name} \n email: ${user.email}`);
+      res.send(`Name: ${user.name} \n Friend ID:${user.friendId} \n Email: ${user.email} `);
     })
     .catch((error) => {
       console.log("Error: ", error);
