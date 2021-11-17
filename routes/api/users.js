@@ -6,6 +6,7 @@ const jwt = require("jsonwebtoken");
 const db = require("../../models");
 const JWT_SECRET = process.env.JWT_SECRET;
 const { registerValidation, loginValidation } = require("../../validation");
+const passport = require("passport");
 // const User = require("../models/User");
 // Postman http://localhost:8000/api/users/test
 router.get("/test", (req, res) => {
@@ -85,6 +86,29 @@ router.post("/login", (req, res) => {
   });
   // res.json("login route connected🎈")
 });
+
+// to get the authorization shown in postman
+// make sure go to Auth tab drop down menu Bearer Token and to the right where it says token
+// copy paste the given token of the user
+// should return :
+// }
+// "id": "61943e6f21685d662b5f3dee",
+//     "name": "newuser",
+//     "email": "newuser@gmail.com"
+// }
+// GET current user info (private)
+// the route is http://localhost:8000/api/users/current
+router.get(
+  "/current",
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+    res.json({
+      id: req.user.id,
+      name: req.user.name,
+      email: req.user.email,
+    });
+  }
+);
 
 //Postman route http://localhost:8000/api/users/6193f7c1975bdb73c252666f
 router.delete("/:id", (req, res) => {
