@@ -7,6 +7,7 @@ const db = require("../../models");
 const JWT_SECRET = process.env.JWT_SECRET;
 const { registerValidation, loginValidation } = require("../../validation");
 const passport = require("passport");
+const User = require("../../models/User");
 // const User = require("../models/User");
 // Postman http://localhost:8000/api/users/test
 router.get("/test", (req, res) => {
@@ -114,10 +115,11 @@ router.get(
 );
 
 // get user by id can be used for search users in database
+// Postman http://localhost:8000/api/users/619518ca90211b9cd557f626
 router.get("/:id", (req, res) => {
   db.User.findById(req.params.id)
     .then((user) => {
-      res.send(`Name: ${user.name} \n Friend ID:${user.friendId} \n Email: ${user.email} `);
+      res.send(user);
     })
     .catch((error) => {
       console.log("Error: ", error);
