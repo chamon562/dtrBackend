@@ -19,6 +19,7 @@ router.post("/register", (req, res) => {
   // find user by email
   db.User.findOne({ email: req.body.email }).then((user) => {
     if (user) {
+      console.log(user)
       return res.status(400).json("Email already exist");
     } else {
       // creating a new user
@@ -39,7 +40,7 @@ router.post("/register", (req, res) => {
           newUser
             .save()
             .then((createdUser) => res.json(createdUser))
-            .catch((error) => res.json(error));
+            .catch((error) => res.json({message: "User friend id or email already exists" }));
         });
       });
     }

@@ -5,6 +5,8 @@ const userSchema = new mongoose.Schema(
     name: {
       type: String,
       required: true,
+      trim: true,
+      lowercase: true,
       min: 6,
       max: 255,
     },
@@ -13,10 +15,12 @@ const userSchema = new mongoose.Schema(
       required: true,
       min: 6,
       max: 255,
+      unique: true
     },
     friendId:{
       type: Number,
       required: true,
+      unique: true,
     },
     password: {
       type: String,
