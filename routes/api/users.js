@@ -40,7 +40,11 @@ router.post("/register", (req, res) => {
           newUser
             .save()
             .then((createdUser) => res.json(createdUser))
-            .catch((error) => res.json({message: "User friend id or email already exists" }));
+            .catch((error) =>{
+                if (error) {
+                  return res.status(400).send({message: "Someone has already registed with that friend ID."});
+                }
+            });
         });
       });
     }
