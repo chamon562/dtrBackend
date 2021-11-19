@@ -20,7 +20,7 @@ router.post("/register", (req, res) => {
   // find user by email
   db.User.findOne({ email: req.body.email }).then((user) => {
     if (user) {
-      console.log(user)
+      console.log(user);
       return res.status(400).json("Email already exist");
     } else {
       // creating a new user
@@ -41,10 +41,15 @@ router.post("/register", (req, res) => {
           newUser
             .save()
             .then((createdUser) => res.json(createdUser))
-            .catch((error) =>{
-                if (error) {
-                  return res.status(400).send({message: "Someone has already registed with that friend ID."});
-                }
+            .catch((error) => {
+              if (error) {
+                return res
+                  .status(400)
+                  .send({
+                    message:
+                      "Someone has already registed with that friend ID.",
+                  });
+              }
             });
         });
       });
@@ -118,6 +123,27 @@ router.get(
 // Postman http://localhost:8000/api/users/619518ca90211b9cd557f626
 router.get("/:id", (req, res) => {
   db.User.findById(req.params.id)
+    .then((user) => {
+      res.send(user);
+    })
+    .catch((error) => {
+      console.log("Error: ", error);
+    });
+});
+
+//Postman http://localhost:8000/api/users/path/179940588
+router.get("/path/:friendId", (req, res) => {
+  // figured out how to have the user be able to place a friendId to locatea player
+  // before i was doing {friendId}
+  // and trying parseInt because the error kept saying value is a string
+  // then i realized by going here that app.get('/path/:friendId', function(req, res) {
+  //   res.send("tagId is set to " + req.params.friendId);
+  // }); sent back the response of the friendId i put in the url
+  // it made me understand that the {friendId} i was using before in db.User.findOne
+  // may have not been getting a value to pass in it so it didnt know?
+  // router.get() has to have /path/:friendId and db.User.findOne(friendId: req.params.friendId)
+  // friendId had to be defined so that was defined with req.params.friendId
+  db.User.findOne({ friendId: req.params.friendId })
     .then((user) => {
       res.send(user);
     })

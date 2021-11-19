@@ -18,9 +18,13 @@ const userSchema = new mongoose.Schema(
       unique: true
     },
     friendId:{
-      type: Number,
+      type: String,
       required: true,
       unique: true,
+    },
+    turboRank:{
+      type: Number,
+      default: 2000
     },
     password: {
       type: String,
