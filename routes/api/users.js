@@ -1,5 +1,6 @@
 require("dotenv").config();
 const express = require("express");
+const cors = require("cors");
 const router = express.Router();
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
@@ -25,9 +26,9 @@ router.post("/register", (req, res) => {
     } else {
       // creating a new user
       const newUser = new db.User({
+        friendId: req.body.friendId,
         name: req.body.name.toLowerCase(),
         email: req.body.email.toLowerCase(),
-        friendId: req.body.friendId,
         password: req.body.password,
       });
       // adding bcrypt to hash password
@@ -43,12 +44,9 @@ router.post("/register", (req, res) => {
             .then((createdUser) => res.json(createdUser))
             .catch((error) => {
               if (error) {
-                return res
-                  .status(400)
-                  .send({
-                    message:
-                      "Someone has already registed with that friend ID.",
-                  });
+                return res.status(400).send({
+                  message: "Someone has already registed with that friend ID.",
+                });
               }
             });
         });
@@ -57,8 +55,10 @@ router.post("/register", (req, res) => {
   });
 });
 
+router.options("/login", cors());
+
 // LOGIN ROUTE
-router.post("/login", (req, res) => {
+router.post("/login", cors(), (req, res) => {
   const email = req.body.email;
   const password = req.body.password;
   // validation email and password
@@ -79,6 +79,7 @@ router.post("/login", (req, res) => {
             id: user.id,
             name: user.name,
             email: user.email,
+            friendId: user.friendId,
           };
           //   Sign token
           jwt.sign(payload, JWT_SECRET, { expiresIn: 3600 }, (error, token) => {
