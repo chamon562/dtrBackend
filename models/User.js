@@ -24,7 +24,7 @@ const userSchema = new mongoose.Schema(
     },
     turboRank:{
       type: Number,
-      default: 2000
+      default: 3000
     },
     password: {
       type: String,

@@ -9,6 +9,8 @@ const JWT_SECRET = process.env.JWT_SECRET;
 const { registerValidation, loginValidation } = require("../../validation");
 const passport = require("passport");
 const User = require("../../models/User");
+const mongoose = require("mongoose");
+
 // const User = require("../models/User");
 // Postman http://localhost:8000/api/users/test
 router.get("/test", (req, res) => {
@@ -95,7 +97,15 @@ router.post("/login", cors(), (req, res) => {
   });
   // res.json("login route connected🎈")
 });
-
+router.get("/all-users", (req, res) => {
+  db.User.find({}, function(err, users){
+    if(err){
+      res.send('something went wrong')
+      next()
+    }
+    res.send(users)
+  })
+});
 // GET current user info (private)
 // to get the authorization shown in postman
 // make sure go to Auth tab drop down menu Bearer Token and to the right where it says token
@@ -153,11 +163,14 @@ router.get("/path/:friendId", (req, res) => {
     });
 });
 
+
+
 // Edit user by id
 router.put("/:id", (req, res) => {
   db.User.findByIdAndUpdate(
-    { _id: req.params.id },
-    { name: req.body.name },
+    req.params.id,
+    req.body,
+
     { new: true }
   )
     .then((updatedUser) => {
